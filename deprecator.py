@@ -1,12 +1,25 @@
 import builtins
 import warnings
 
-DEPRECATED_TO_NEW_NAME = {"bar": "foo", "baz": "qux"}
+DEPRECATED_TO_NEW_NAME = {}
 
 modified = False
 
 
+def register_deprecation(old_name: str, new_name: str) -> None:
+    """
+    Register that function with name 'old_name' is now called 'new_name'
+    """
+    DEPRECATED_TO_NEW_NAME.update({old_name: new_name})
+    global modified
+    modified = False
+    modify_imports()
+
+
 def modify_imports():
+    """
+     Run after registration to show that
+    """
     global modified
     if modified:
         return
