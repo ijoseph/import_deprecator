@@ -24,17 +24,19 @@ def _modify_imports():
         module = old_imp(*args, **kwargs)
         # fromlist is fourth arg if given
         if len(args) >= 4 and isinstance(args[3], tuple):
-            deprecated_imports = set(args[3]) & set(
-                DEPRECATED_TO_NEW_NAME.keys()
-            )
+            deprecated_imports = set(args[3]) & set(DEPRECATED_TO_NEW_NAME.keys())
         else:
             deprecated_imports = {}
 
         for deprecated_import in deprecated_imports:
             warnings.warn(
-                f"{deprecated_import} has been renamed! ; use 'from {args[0]} import  {DEPRECATED_TO_NEW_NAME[deprecated_import]}' instead",
+                (
+                    f"\n  Object '{args[0]}.{deprecated_import}' has been renamed to "
+                    f"'{args[0]}.{DEPRECATED_TO_NEW_NAME[deprecated_import]}'!\n"
+                    f"  Consider using \n    from {args[0]} import {DEPRECATED_TO_NEW_NAME[deprecated_import]}\n  instead of"
+                ),
                 category=DeprecationWarning,
-                stacklevel=2
+                stacklevel=2,
             )
         return module
 
