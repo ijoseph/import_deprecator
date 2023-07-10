@@ -19,6 +19,7 @@ class TestDeprecator(unittest.TestCase):
         with warnings.catch_warnings(record=True) as w:
             from library_module import bar
             self.assertTrue(len(w) > 0)
+            self.assertIn("'library_module.bar' has been renamed", str(w[0]))
 
 
 if __name__ == "__main__":
