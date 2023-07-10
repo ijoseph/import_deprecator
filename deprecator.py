@@ -6,7 +6,7 @@ DEPRECATED_TO_NEW_NAME = {}
 modified = False
 
 
-def register_deprecation(old_name: str, new_name: str) -> None:
+def register_name_change(old_name: str, new_name: str) -> None:
     """
     Register that function with name 'old_name' is now called 'new_name'
     """
