@@ -11,19 +11,13 @@ def register_deprecation(old_name: str, new_name: str) -> None:
     Register that function with name 'old_name' is now called 'new_name'
     """
     DEPRECATED_TO_NEW_NAME.update({old_name: new_name})
-    global modified
-    modified = False
-    modify_imports()
+    _modify_imports()
 
 
-def modify_imports():
+def _modify_imports():
     """
-     Run after registration to show that
+    Patch 'from <module> import <object>' calls
     """
-    global modified
-    if modified:
-        return
-
     old_imp = builtins.__import__
 
     def custom_import(*args, **kwargs):
@@ -38,7 +32,7 @@ def modify_imports():
 
         for deprecated_import in deprecated_imports:
             warnings.warn(
-                f"{deprecated_import} has been renamed!!! ; use 'from <location> import  {DEPRECATED_TO_NEW_NAME[deprecated_import]}' instead",
+                f"{deprecated_import} has been renamed! ; use 'from {args[0]} import  {DEPRECATED_TO_NEW_NAME[deprecated_import]}' instead",
                 category=DeprecationWarning,
                 stacklevel=2
             )

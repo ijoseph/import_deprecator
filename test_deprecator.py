@@ -8,10 +8,7 @@ class TestDeprecator(unittest.TestCase):
         warnings.simplefilter("always")
 
     def test_deprecate(self):
-
-        import deprecator
-
-        deprecator.modify_imports()
+        # import library_module
 
         # 'foo' is not deprecated; ensure does not warn, as would throw exception
         with warnings.catch_warnings():
@@ -21,7 +18,6 @@ class TestDeprecator(unittest.TestCase):
         # 'bar' is deprecated, warns
         with warnings.catch_warnings(record=True) as w:
             from library_module import bar
-
             self.assertTrue(len(w) > 0)
 
 
