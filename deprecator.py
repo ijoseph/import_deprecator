@@ -1,17 +1,19 @@
 import builtins
+from typing import Callable
 import warnings
+
 
 DEPRECATED_TO_NEW_NAME = {}
 
 modified = False
 
 
-def register_name_change(old_name: str, new_name: str) -> None:
+def register_name_change(old_name: str, new_function: Callable) -> None:
     """
     Register that function with name 'old_name' is now called 'new_name'.
 
     """
-    DEPRECATED_TO_NEW_NAME.update({old_name: new_name})
+    DEPRECATED_TO_NEW_NAME.update({old_name: new_function.__name__})
     _patch_import()
 
 
