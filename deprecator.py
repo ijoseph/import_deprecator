@@ -1,20 +1,26 @@
 import builtins
+import sys
+from typing import Callable
 import warnings
+
+
 
 DEPRECATED_TO_NEW_NAME = {}
 
 modified = False
 
 
-def register_name_change(old_name: str, new_name: str) -> None:
+def register_name_change(old_name: str, new_function: Callable) -> None:
     """
-    Register that function with name 'old_name' is now called 'new_name'
+    Register that function with name 'old_name' is now called 'new_name'.
+
     """
-    DEPRECATED_TO_NEW_NAME.update({old_name: new_name})
-    _modify_imports()
+    DEPRECATED_TO_NEW_NAME.update({old_name: new_function.__name__})
+    _patch_import()
+    #_patch_module(old_name, new_function)
 
 
-def _modify_imports():
+def _patch_import():
     """
     Patch 'from <module> import <object>' calls
     """
@@ -33,7 +39,8 @@ def _modify_imports():
                 (
                     f"\n  Object '{args[0]}.{deprecated_import}' has been renamed to "
                     f"'{args[0]}.{DEPRECATED_TO_NEW_NAME[deprecated_import]}'!\n"
-                    f"  Consider using \n    from {args[0]} import {DEPRECATED_TO_NEW_NAME[deprecated_import]}\n  instead of"
+                    f"  Consider using \n  'from {args[0]} import {DEPRECATED_TO_NEW_NAME[deprecated_import]}'\n  "
+                    f"instead of"
                 ),
                 category=DeprecationWarning,
                 stacklevel=2,
@@ -42,3 +49,13 @@ def _modify_imports():
 
     builtins.__import__ = custom_import
     modified = True
+
+
+def _patch_module(old_name: str, new_function: Callable) -> None:
+    """
+    Create old_name as copy of new_function in the same module.
+    """
+    function_mod = new_function.__module__
+    setattr(sys.modules[function_mod], old_name, new_function)
+
+

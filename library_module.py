@@ -1,12 +1,12 @@
 import deprecator
 
 
-def foo():
+def new_function():
     return "foo"
 
 
-deprecator.register_name_change(old_name="bar", new_name="foo")
+def deprecated_function(*args, **kwargs):  # 'foo' used to be 'bar'
+    return new_function(*args, **kwargs)
 
 
-def bar(*args, **kwargs):  # 'foo' used to be 'bar'
-    return foo(*args, **kwargs)
+deprecator.register_name_change(old_name="deprecated_function", new_function=new_function)
