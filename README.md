@@ -50,9 +50,9 @@ deprecator.register_name_change(old_name="some_function", new_function=some_rena
 
   Object 'some.long.chain.of.packages.some_function' has been renamed to 'some.long.chain.of.packages.some_renamed_function'!
   Consider using
-  'from some.long.chain.of.packages.some_function import some_renamed_function'
-  instead of
   from some.long.chain.of.packages.some_function import some_renamed_function
+  instead of
+  from some.long.chain.of.packages.some_function import some_function
 ```
 
 
