@@ -20,6 +20,8 @@ class TestDeprecator(unittest.TestCase):
             from library_module import deprecated_function
             self.assertTrue(len(w) > 0)
             self.assertIn("'library_module.deprecated_function' has been renamed", str(w[0]))
+            # old function still works, though:
+            self.assertEqual("new function result", deprecated_function())
 
 
 if __name__ == "__main__":
