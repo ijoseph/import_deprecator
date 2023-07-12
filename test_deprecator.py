@@ -17,14 +17,14 @@ class TestDeprecator(unittest.TestCase):
 
         # 'bar' is deprecated, warns
         with warnings.catch_warnings(record=True) as w:
-            from library_module import deprecated
+            from library_module import previous_name
 
             self.assertTrue(len(w) > 0)
             self.assertIn(
-                "'library_module.deprecated' has been renamed", str(w[0])
+                "'library_module.previous_name' has been renamed", str(w[0])
             )
             # old function still works, though:
-            self.assertEqual("new function result", deprecated())
+            self.assertEqual("new function result", previous_name())
 
             # as does new function
             from library_module import replacement

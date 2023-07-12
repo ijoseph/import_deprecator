@@ -55,4 +55,5 @@ def _patch_module(old_name: str, new_function: Callable) -> None:
     Create old_name as copy of new_function in the same module.
     """
     function_mod = new_function.__module__
+    # TODO: warn if overwriting existing deprecated function
     setattr(sys.modules[function_mod], old_name, new_function)
