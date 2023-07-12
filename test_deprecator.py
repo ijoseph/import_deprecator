@@ -13,19 +13,23 @@ class TestDeprecator(unittest.TestCase):
         # 'foo' is not deprecated; ensure does not warn, as would throw exception
         with warnings.catch_warnings():
             warnings.simplefilter("error")
-            from library_module import new_function
+            from library_module import replacement
 
         # 'bar' is deprecated, warns
         with warnings.catch_warnings(record=True) as w:
-            from library_module import deprecated_function
+            from library_module import deprecated
+
             self.assertTrue(len(w) > 0)
-            self.assertIn("'library_module.deprecated_function' has been renamed", str(w[0]))
+            self.assertIn(
+                "'library_module.deprecated' has been renamed", str(w[0])
+            )
             # old function still works, though:
-            self.assertEqual("new function result", deprecated_function())
+            self.assertEqual("new function result", deprecated())
 
             # as does new function
-            from library_module import new_function
-            self.assertIn("new function result", new_function())
+            from library_module import replacement
+
+            self.assertIn("new function result", replacement())
 
 
 if __name__ == "__main__":
