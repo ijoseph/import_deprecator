@@ -23,6 +23,10 @@ class TestDeprecator(unittest.TestCase):
             # old function still works, though:
             self.assertEqual("new function result", deprecated_function())
 
+            # as does new function
+            from library_module import new_function
+            self.assertIn("new function result", new_function())
+
 
 if __name__ == "__main__":
     unittest.main()
