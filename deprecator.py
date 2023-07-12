@@ -4,7 +4,6 @@ from typing import Callable
 import warnings
 
 
-
 DEPRECATED_TO_NEW_NAME = {}
 
 modified = False
@@ -17,7 +16,7 @@ def register_name_change(old_name: str, new_function: Callable) -> None:
     """
     DEPRECATED_TO_NEW_NAME.update({old_name: new_function.__name__})
     _patch_import()
-    #_patch_module(old_name, new_function)
+    _patch_module(old_name, new_function)
 
 
 def _patch_import():
@@ -57,5 +56,3 @@ def _patch_module(old_name: str, new_function: Callable) -> None:
     """
     function_mod = new_function.__module__
     setattr(sys.modules[function_mod], old_name, new_function)
-
-
