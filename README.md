@@ -1,9 +1,9 @@
 # `import_deprecator`
 
 This was motivated by the following issue:
-in a large codebase, it's common to use the `from some.long.chain.of.packages import some_function` [syntax](https://docs.python.org/3.10/reference/simple_stmts.html#import:~:text=from%20foo.bar%20import%20baz%20%20%20%20%23%20foo%2C%20foo.bar%2C%20and%20foo.bar.baz%20imported%2C%20foo.bar.baz%20bound%20as%20baz) to import `some_function`, as it's more ergonic than imply importing `some.long.chain.of.packages` and using this whole string each time the function is called, and also more straightforward than using the `as` syntax to create an alias of the same. 
+in a large code base, it's common to use the `from some.long.chain.of.packages import some_function` [syntax](https://docs.python.org/3.10/reference/simple_stmts.html#import:~:text=from%20foo.bar%20import%20baz%20%20%20%20%23%20foo%2C%20foo.bar%2C%20and%20foo.bar.baz%20imported%2C%20foo.bar.baz%20bound%20as%20baz) to import `some_function`, as it's more ergonomic than imply importing `some.long.chain.of.packages` and using this whole string each time the function is called, and also more straightforward than using the `as` syntax to create an alias of the same. 
 
-Develoeprs/ maintainers of `some.long.chain.of.packages` might, of course, later want to refactor `some_function(...)` to be called `some_renamed_function`.
+Developers/ maintainers of `some.long.chain.of.packages` might, of course, later want to refactor `some_function(...)` to be called `some_renamed_function`.
 
 This presents an issue for the callers of `some_function`, who now must change all their imports (and calls) accordingly. 
 
@@ -59,15 +59,16 @@ deprecator.register_name_change(old_name="some_function", new_function=some_rena
 
 ## Notes
 
-It's discouraged to modify `builtins.__import__`, but I can't see a better way to do it now. [(Need to check this out, though)](https://github.com/python/cpython/blob/2b428a1faed88f148ede131e3b86ab6227c6c3f0/Lib/importlib/_bootstrap.py#L1211) 
+Modifying  `builtins.__import__` is discouraged, but I can't see a better way to do it now as `importlib` doesn't appear to handle `fromlist` imports. [(Need to check this out, though)](https://github.com/python/cpython/blob/2b428a1faed88f148ede131e3b86ab6227c6c3f0/Lib/importlib/_bootstrap.py#L1211) 
 
-# Example
-```bash
-❯ python end_user.py
-```
-> ```
-> end_user.py:6: DeprecationWarning: bar has been renamed!!! ; use 'from <location> import  foo' instead
->  from library_module import bar
->```  
 
 ## Future Milestones
+1. make into an installable
+1. Use decorator syntax
+2. Warn if overwriting existing deprecated function
+6. Support moving (to a new module) without renaming
+7. Verify support for arbitrary objects rather than just `typing.Callable`s
+8. Verify support for multiple-argument from-list 
+9. Handle version numbers
+
+
